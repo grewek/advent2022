@@ -1,0 +1,24 @@
+empty = { "    " }
+number = { (ASCII_DIGIT)+ }
+space = _{ " " }
+cname = { 'A' .. 'Z' }
+linebreak = { "\n" }
+
+term_move = { "move" }
+term_from = { "from" }
+term_to   = { "to"   }
+
+container = _{ &space? ~ "[" ~ cname ~ "]" }
+container_list = { (container|empty|space|linebreak)+ }
+
+
+stack_number = { (space|number+|NEWLINE)* }
+instructions = { term_move ~ space ~ number ~ " " ~ term_from ~  " " 
+				 ~ number ~ " " ~ term_to ~ " " ~ number ~ NEWLINE }
+file = {
+	SOI ~
+    container_list ~
+    stack_number ~
+    instructions+ ~
+    EOI
+}
